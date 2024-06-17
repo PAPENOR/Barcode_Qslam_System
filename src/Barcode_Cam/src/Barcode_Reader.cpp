@@ -29,6 +29,7 @@ private:
     std::string ip_address_;             // IP 地址
     double x_offset_param_ = 0;          // X 軸偏移參數
     double y_offset_param_ = 0;          // Y 軸偏移參數
+    double w_offset_param_ = 0;          // W 軸偏移參數
     int port_;                           // 端口
     int spin_rate_;                      // 自旋速率
     int len_name_;                       // 名稱長度
@@ -95,16 +96,18 @@ void BarcodeReaderUI::paramTriggerCallback(const std_msgs::Bool::ConstPtr& msg) 
 void BarcodeReaderUI::loadParams() {
     nh_.param<double>("Barcode_Reader/offsetX", x_offset_param_, 0.0);
     nh_.param<double>("Barcode_Reader/offsetY", y_offset_param_, 0.0);
+    nh_.param<double>("Barcode_Reader/offsetW", w_offset_param_, 0.0);
 }
 
 BarcodeReaderUI::BarcodeReaderUI(const std::string& name) {
-    YAML::Node config = YAML::LoadFile("/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml");
+    YAML::Node config = YAML::LoadFile("/home/admin1/Barcode_Qslam_System/src/Barcode_Cam/src/barcode_reader.yaml");
     param_trigger_sub_ = nh_.subscribe("/Motion_param_trigger", 10, &BarcodeReaderUI::paramTriggerCallback, this);
     param_trigger_pub_ = nh_.advertise<std_msgs::Bool>("/Motion_param_trigger", 10);
     barcode_pub_ = nh_.advertise<Barcode_Cam::Cam_Barcode>("/cam_barcode", 10);
 
     x_offset_param_ = config["offsetX"].as<double>();
     y_offset_param_ = config["offsetY"].as<double>();
+    w_offset_param_ = config["offsetW"].as<double>();
     nh_.param<std::string>("Barcode_Reader/ip", ip_address_, "192.125.1.20");
     nh_.param("Barcode_Reader/port", port_, 3000);
     nh_.param("Barcode_Reader/spin_rate", spin_rate_, 30);
@@ -121,7 +124,7 @@ BarcodeReaderUI::BarcodeReaderUI(const std::string& name) {
         handleError("連接錯誤");
     }
 
-    ROS_INFO("TCPIP_sub 已啟動");
+    ROS_INFO("TCPIP_sub is working");
     ros::Rate loop_rate(spin_rate_);
     Barcode_Cam::Cam_Barcode barcode_state;
 
@@ -146,7 +149,7 @@ BarcodeReaderUI::BarcodeReaderUI(const std::string& name) {
 
             double offset_x_mm = x_offset_param_;
             double offset_y_mm = y_offset_param_;
-            avg_angle += 180;
+            avg_angle =avg_angle+ w_offset_param_;
             if (avg_angle > 360) {
                 avg_angle -= 360;
             }
