@@ -100,7 +100,7 @@ void BarcodeReaderUI::loadParams() {
 }
 
 BarcodeReaderUI::BarcodeReaderUI(const std::string& name) {
-    YAML::Node config = YAML::LoadFile("/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml");
+    YAML::Node config = YAML::LoadFile("/home/admin1/Barcode_Qslam_System/src/Barcode_Cam/src/barcode_reader.yaml");
     param_trigger_sub_ = nh_.subscribe("/Motion_param_trigger", 10, &BarcodeReaderUI::paramTriggerCallback, this);
     param_trigger_pub_ = nh_.advertise<std_msgs::Bool>("/Motion_param_trigger", 10);
     barcode_pub_ = nh_.advertise<Barcode_Cam::Cam_Barcode>("/cam_barcode", 10);
