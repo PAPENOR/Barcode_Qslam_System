@@ -149,7 +149,7 @@ BarcodeReaderUI::BarcodeReaderUI(const std::string& name) {
 
             double offset_x_mm = x_offset_param_;
             double offset_y_mm = y_offset_param_;
-            avg_angle += w_offset_param_;
+            avg_angle =avg_angle+ w_offset_param_;
             if (avg_angle > 360) {
                 avg_angle -= 360;
             }
