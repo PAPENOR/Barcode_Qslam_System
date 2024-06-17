@@ -19,6 +19,7 @@ Barcode_Reader_UI::Barcode_Reader_UI(QWidget *parent) :
     ui->port->setText(QString::number(config["port"].as<int>()));
     ui->offsetX->setText(QString::number(config["offsetX"].as<double>()));
     ui->offsetY->setText(QString::number(config["offsetY"].as<double>()));
+    ui->offsetW->setText(QString::number(config["offsetW"].as<double>()));
 
     // 設置計時器
     QTimer *timer1 = new QTimer(this);
