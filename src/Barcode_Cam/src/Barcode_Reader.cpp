@@ -124,7 +124,7 @@ BarcodeReaderUI::BarcodeReaderUI(const std::string& name) {
         handleError("連接錯誤");
     }
 
-    ROS_INFO("TCPIP_sub 已啟動");
+    ROS_INFO("TCPIP_sub is working");
     ros::Rate loop_rate(spin_rate_);
     Barcode_Cam::Cam_Barcode barcode_state;
 
