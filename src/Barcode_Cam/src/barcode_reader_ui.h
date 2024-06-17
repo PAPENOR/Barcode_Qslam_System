@@ -27,6 +27,7 @@ protected:
     ros::Subscriber Param_trigger_Sub  = Barcode_Reader.subscribe("/Motion_param_trigger", 10, &Barcode_Reader_UI::Param_trigger_Callback,this);
     bool Param_Trigger = false;
     Barcode_Cam::Cam_Barcode Barcode_state;
+    string file_path = "/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml";
 
 
 public:

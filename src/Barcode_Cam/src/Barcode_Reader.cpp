@@ -76,7 +76,7 @@ void BarcodeReaderUI::decodeQRCode(const string& bar_code_data, double &avg_x, d
         } else if (char_value == -7) {
             countCoordinateValue(is_positive, single_word, pose_words); // 計算並加入座標值
             if (pose_words.size() < 4) {
-                ROS_WARN_STREAM("數據丟失");
+                ROS_WARN_STREAM("Missing_Msg");
             } else {
                 avg_x = pose_words[0] / 10.0;
                 avg_y = pose_words[1] / 10.0;

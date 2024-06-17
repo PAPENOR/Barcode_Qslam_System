@@ -1,5 +1,3 @@
-//test
-
 #include <ros/ros.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,17 +11,43 @@
 #include <vector>
 #include "Barcode_Cam/Cam_Barcode.h"
 #include "arpa/inet.h"
+#include "std_msgs/Bool.h"
+#include <yaml-cpp/yaml.h>
 #define MESSAGE_FREQ 1
-
 using namespace std;
-void Error(const char *msg)
+using namespace ros;
+class Barcode_Reader_UI {
+private:
+    NodeHandle Barcode_Reader;
+    Subscriber Param_trigger_Sub;
+    Publisher  Param_trigger_Pub;
+    Publisher  Barcode_Pub;
+    bool Param_Trigger;
+    std_msgs::Bool Trigger_msg;
+    std::string IP_Address;
+    double X_Offset_Param = 0;
+    double Y_Offset_Param = 0;
+    int Port;
+    int Spin_Rate;
+    int Len_Name;
+    int Sockfd, Portno, n;
+public:
+    Barcode_Reader_UI(std::string Name);
+      ~Barcode_Reader_UI();
+    void Param_trigger_Callback(const std_msgs::Bool::ConstPtr& msg);
+    void param_loading();
+    void Error(const char *msg);
+    void Count_The_Value_Of_Coordinate_Word(bool &Coordinate_Word_Positive, int &Single_Word, vector<int> &Pose_Word);
+    void QR_Cam_Decoder(string Bar_Code_data, double &Avg_X, double &Avg_Y, double &Avg_Angle, int &Tag_Short_Name);
+};
+
+void Barcode_Reader_UI::Error(const char *msg)
 {
   // 印出 perror 訊息和輸出錯誤碼，並終止程式
   perror(msg);
   exit(0);
 }
-
-void Count_The_Value_Of_Coordinate_Word(bool &Coordinate_Word_Positive, int &Single_Word, vector<int> &Pose_Word) {
+void Barcode_Reader_UI::Count_The_Value_Of_Coordinate_Word(bool &Coordinate_Word_Positive, int &Single_Word, vector<int> &Pose_Word) {
   if(Coordinate_Word_Positive == false) {
     Single_Word = Single_Word * -1;                 // 將單詞變成負數
   }
@@ -32,8 +56,7 @@ void Count_The_Value_Of_Coordinate_Word(bool &Coordinate_Word_Positive, int &Sin
   Coordinate_Word_Positive = true;                  // 設定下一個單詞為正數
   Single_Word = 0;                                  // 將單詞設為 0，以便下一輪重新統計
 }
-
-void QR_Cam_Decoder(string Bar_Code_data, double &Avg_X, double &Avg_Y, double &Avg_Angle, int &Tag_Short_Name)
+void Barcode_Reader_UI::QR_Cam_Decoder(string Bar_Code_data, double &Avg_X, double &Avg_Y, double &Avg_Angle, int &Tag_Short_Name)
 {
   vector<int> Pose_Ward;
   int Single_Word = 0;
@@ -77,26 +100,29 @@ void QR_Cam_Decoder(string Bar_Code_data, double &Avg_X, double &Avg_Y, double &
     }
   }
 }
-
-int main(int argc, char **argv)
+void Barcode_Reader_UI::Param_trigger_Callback(const std_msgs::Bool::ConstPtr& msg)
 {
-    ros::init(argc, argv, "Barcode_Reader");
-    ros::NodeHandle nh;
-    ros::Publisher Barcode_Pub = nh.advertise<Barcode_Cam::Cam_Barcode>("/cam_barcode", 10);
-    std::string IP_Address;
-    double X_Offset_Param,Y_Offset_Param;
-    int Port;
-    int Spin_Rate;
-    int Len_Name;
-    nh.param<double>("Barcode_Reader/offsetX",X_Offset_Param,0.0);
-    nh.param<double>("Barcode_Reader/offsetY",Y_Offset_Param,0.0);
-    nh.param<std::string>("Barcode_Reader/ip", IP_Address, "192.168.1.20");
-    nh.param("Barcode_Reader/port", Port, 3000);
-    nh.param("Barcode_Reader/spin_rate", Spin_Rate, 30);
-    nh.param("Barcode_Reader/len_name", Len_Name, 8);
-
+    Param_Trigger= msg->data;
+}
+void Barcode_Reader_UI::param_loading()
+{
+    Barcode_Reader.param<double>("Barcode_Reader/offsetX",X_Offset_Param,0.0);
+    Barcode_Reader.param<double>("Barcode_Reader/offsetY",Y_Offset_Param,0.0);
+}
+Barcode_Reader_UI::Barcode_Reader_UI(std::string Name)
+{
+    std::string file_path = "/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml";
+    YAML::Node config = YAML::LoadFile("/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml");
+    Param_trigger_Sub  = Barcode_Reader.subscribe("/Motion_param_trigger", 10, &Barcode_Reader_UI::Param_trigger_Callback,this);
+    Param_trigger_Pub  = Barcode_Reader.advertise<std_msgs::Bool>("/Motion_param_trigger",10);
+    Barcode_Pub        = Barcode_Reader.advertise<Barcode_Cam::Cam_Barcode>("/cam_barcode", 10);
+    X_Offset_Param = config["offsetX"].as<double>();
+    Y_Offset_Param = config["offsetY"].as<double>();
+    Barcode_Reader.param<std::string>("Barcode_Reader/ip", IP_Address, "192.125.1.20");
+    Barcode_Reader.param("Barcode_Reader/port", Port, 3000);
+    Barcode_Reader.param("Barcode_Reader/spin_rate", Spin_Rate, 30);
+    Barcode_Reader.param("Barcode_Reader/len_name", Len_Name, 8);
     // 建立 TCP socket 並連線到伺服器
-    int Sockfd, Portno, n;
     struct sockaddr_in Serv_Addr;
     memset(&Serv_Addr, 0, sizeof(Serv_Addr));                           // 初始化伺服器位址結構
     Sockfd = socket(AF_INET, SOCK_STREAM, 0);                           // 建立 TCP socket
@@ -109,7 +135,6 @@ int main(int argc, char **argv)
     Serv_Addr.sin_addr.s_addr = inet_addr(IP_char);                     // 將字元陣列轉換為 IP 位址結構
     if (connect(Sockfd, (struct sockaddr *) &Serv_Addr, sizeof(Serv_Addr)) < 0)
     Error("ERROR connecting");                                          // 連線到伺服器，若連線失敗則輸出錯誤訊息
-
     char Buffer[256];
     double Avg_X, Avg_Y, Avg_Angle;
     int Tag_Short_Name;
@@ -118,6 +143,12 @@ int main(int argc, char **argv)
     Barcode_Cam::Cam_Barcode Barcode_State;                             // 建立 ROS 發布訊息的物件
     while (ros::ok())
     {
+      if(Param_Trigger==true)
+        {
+        param_loading();
+        Trigger_msg.data=false;
+        Param_trigger_Pub.publish(Trigger_msg);
+        }
             bzero(Buffer, 255);                                         // 初始化緩衝區
             n = read(Sockfd, Buffer, 255);                              // 讀取資料
             if (n < 0 || n > 255)
@@ -151,5 +182,15 @@ int main(int argc, char **argv)
             ros::spinOnce(); // 回應 callback 函式
             Loop_Rate.sleep(); // 暫停指定時間
     }
+}
+Barcode_Reader_UI::~Barcode_Reader_UI()
+{
+
+}
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "Barcode_Reader");
+    Barcode_Reader_UI barcodeReader("Barcode");
+    ros::spinOnce(); // 回應 callback 函式
     return 0;
 }

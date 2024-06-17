@@ -7,8 +7,7 @@ Barcode_Reader_UI::Barcode_Reader_UI(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Barcode_Reader_UI)
 {
-    std::string file_path = "/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml";
-    YAML::Node config = YAML::LoadFile("/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml");
+    YAML::Node config = YAML::LoadFile(file_path);
     ui->setupUi(this);
     ui->ip->setText(QString::fromStdString(config["ip"].as<std::string>()));
     ui->port->setText(QString::number(config["port"].as<double>()));
@@ -51,7 +50,6 @@ void Barcode_Reader_UI::Setting_Init_param()
 {
     Barcode_Reader.setParam("Barcode_Reader/offsetX", ui->offsetX->text().toDouble());
     Barcode_Reader.setParam("Barcode_Reader/offsetY", ui->offsetY->text().toDouble());
-    string file_path = "/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml";
     YAML::Node config = YAML::LoadFile(file_path);
     config["ip"] = ui->ip->text().toStdString();
     config["port"] = ui->port->text().toDouble();
