@@ -1,0 +1,2 @@
+canalystii_node_msg
+-G CodeBlocks - Unix Makefiles -DCMAKE_BUILD_TYPE=Debug -DCATKIN_DEVEL_PREFIX=/home/user/Barcode_Qslam_System/devel -DCMAKE_INSTALL_PREFIX=/home/user/Barcode_Qslam_System/install
