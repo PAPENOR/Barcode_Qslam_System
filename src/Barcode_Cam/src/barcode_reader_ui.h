@@ -33,6 +33,7 @@ protected:
     Barcode_Cam::Cam_Barcode barcode_state_;  // 條碼狀態
 
 public:
+    std::string file_path = "/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml";
     explicit Barcode_Reader_UI(QWidget *parent = nullptr); // 構造函數
     ~Barcode_Reader_UI();  // 析構函數
 

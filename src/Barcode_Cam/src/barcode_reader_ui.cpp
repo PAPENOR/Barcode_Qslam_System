@@ -10,7 +10,7 @@ Barcode_Reader_UI::Barcode_Reader_UI(QWidget *parent) :
     trigger_(false)
 {
     // 加載配置文件
-    std::string file_path = "/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml";
+
     YAML::Node config = YAML::LoadFile(file_path);
 
     // 設置UI
@@ -66,9 +66,9 @@ void Barcode_Reader_UI::Setting_Init_param()
     // 設置參數
     nh_.setParam("Barcode_Reader/offsetX", ui->offsetX->text().toDouble());
     nh_.setParam("Barcode_Reader/offsetY", ui->offsetY->text().toDouble());
+    nh_.setParam("Barcode_Reader/offsetW", ui->offsetW->text().toDouble());
 
     // 加載配置文件
-    std::string file_path = "/home/admin1/BarCode_AMR/src/Barcode_Cam/src/barcode_reader.yaml";
     YAML::Node config = YAML::LoadFile(file_path);
 
     // 更新配置文件內容
@@ -76,6 +76,7 @@ void Barcode_Reader_UI::Setting_Init_param()
     config["port"] = ui->port->text().toInt();
     config["offsetX"] = ui->offsetX->text().toDouble();
     config["offsetY"] = ui->offsetY->text().toDouble();
+    config["offsetW"] = ui->offsetW->text().toDouble();
 
     // 保存配置文件
     std::ofstream fout(file_path);
