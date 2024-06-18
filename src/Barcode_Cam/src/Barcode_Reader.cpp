@@ -13,6 +13,7 @@
 #include <vector>
 #include "Barcode_Cam/Cam_Barcode.h"
 
+
 #define MESSAGE_FREQ 1
 
 using namespace std;
