@@ -291,7 +291,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QGraphicsView" name="graphicsView"/>
+     <widget class="QGraphicsView" name="Data_matrix_view"/>
     </item>
    </layout>
   </widget>

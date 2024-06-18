@@ -2,13 +2,14 @@
 #include "ui_barcode_reader_ui.h"
 #include <yaml-cpp/yaml.h>
 #include <fstream>
-
+#include <QGraphicsPixmapItem>
 // 條碼讀取UI構造函數
 Barcode_Reader_UI::Barcode_Reader_UI(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Barcode_Reader_UI),
     trigger_(false)
 {
+
     // 加載配置文件
 
     YAML::Node config = YAML::LoadFile(file_path);
@@ -20,7 +21,11 @@ Barcode_Reader_UI::Barcode_Reader_UI(QWidget *parent) :
     ui->offsetX->setText(QString::number(config["offsetX"].as<double>()));
     ui->offsetY->setText(QString::number(config["offsetY"].as<double>()));
     ui->offsetW->setText(QString::number(config["offsetW"].as<double>()));
-
+    QGraphicsPixmapItem *pic = new QGraphicsPixmapItem();
+    pic->setPixmap(QPixmap(QString::fromStdString(Data_Matrix_file)));
+    QGraphicsScene *scene = new QGraphicsScene();
+    scene->addItem(pic);
+    ui->Data_matrix_view->setScene(scene);
     // 設置計時器
     QTimer *timer1 = new QTimer(this);
     connect(timer1, &QTimer::timeout, this, &Barcode_Reader_UI::MyTimerSlot);
