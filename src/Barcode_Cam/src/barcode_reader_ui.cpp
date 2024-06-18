@@ -148,3 +148,7 @@ void Barcode_Reader_UI::Setting_Init_param()
     trigger_msg_.data = true;
     param_trigger_pub_.publish(trigger_msg_);
 }
+void Barcode_Reader_UI::Exit()
+{
+  reject();
+}

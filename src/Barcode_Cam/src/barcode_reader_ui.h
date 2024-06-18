@@ -33,8 +33,8 @@ protected:
     Barcode_Cam::Cam_Barcode barcode_state_;  // 條碼狀態
 
 public:
-    std::string file_path = "/home/user/Barcode_Qslam_System/src/Barcode_Cam/src/barcode_reader.yaml";
-    std::string Data_Matrix_file="/home/user/Barcode_Qslam_System/src/Barcode_Cam/src/01040132.jpg";
+    std::string file_path = "/home/admin1/Barcode_Qslam_System/src/Barcode_Cam/src/barcode_reader.yaml";
+    std::string Data_Matrix_file="/home/admin1/Barcode_Qslam_System/src/Barcode_Cam/src/01040132.jpg";
     explicit Barcode_Reader_UI(QWidget *parent = nullptr); // 構造函數
     ~Barcode_Reader_UI();  // 析構函數
 
@@ -43,6 +43,7 @@ public slots:
     void Cam_Barcode_Callback(const Barcode_Cam::Cam_Barcode::ConstPtr& msg);  // 條碼相機回調槽函數
     void Param_trigger_Callback(const std_msgs::Bool::ConstPtr& msg);  // 參數觸發回調槽函數
     void MyTimerSlot();  // 計時器槽函數
+    void Exit();
 
 private:
     Ui::Barcode_Reader_UI *ui;  // UI 指針
