@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.9.2, 2024-06-17T00:03:19. -->
+<!-- Written by QtCreator 4.9.2, 2024-06-19T02:50:43. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -112,7 +112,7 @@
      <value type="QString">PYTHONPATH=/home/user/Barcode_Qslam_System/devel/lib/python2.7/dist-packages:/opt/ros/melodic/lib/python2.7/dist-packages</value>
      <value type="QString">ROSLISP_PACKAGE_DIRECTORIES=/home/user/Barcode_Qslam_System/devel/share/common-lisp</value>
      <value type="QString">ROS_PACKAGE_PATH=/home/user/Barcode_Qslam_System/src:/opt/ros/melodic/share</value>
-     <value type="QString">SHLVL=10</value>
+     <value type="QString">SHLVL=227</value>
      <value type="QString">TERM=xterm</value>
      <value type="QString">_=/usr/bin/env</value>
     </valuelist>
