@@ -1,0 +1,20 @@
+<launch>
+
+<node pkg="Li_God_Battery" type="Battery_485_232" name="Battery_485_232" output="screen">
+    <param name="address_port" value="/dev/ttyS0"/>
+    <param name="baudrate" value="9600"/>
+    <param name="Oddmode" value="N"/>
+    <param name="Endmode" value="1"/>
+    <param name="Datasize" value="8"/>
+    <param name="SlaveID" value="1"/>
+
+    <param name="Now_VoltAddr" value="18"/>
+    <param name="Now_AmAddr" value="19"/>
+    <param name="Now_AhAddr" value="20"/>
+    <param name="Now_Temp1Addr" value="41"/>
+    <param name="Now_Temp2Addr" value="42"/>
+    <param name="Now_PowerAddr" value="46"/>
+
+</node>
+
+</launch>
